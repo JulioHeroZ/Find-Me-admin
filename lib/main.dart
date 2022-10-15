@@ -4,6 +4,7 @@ import 'package:find_me_admin/screens/category_screen.dart';
 import 'package:find_me_admin/screens/dashboard_screen.dart';
 import 'package:find_me_admin/screens/main_category_screen.dart';
 import 'package:find_me_admin/screens/sub_category_screen.dart';
+import 'package:find_me_admin/screens/vendors_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Find Me Web Admin',
-      theme: ThemeData(primarySwatch: Colors.yellow),
+      theme: ThemeData(primarySwatch: Colors.amber),
       home: SideMenu(),
       builder: EasyLoading.init(),
     );
@@ -73,6 +74,11 @@ class _SideMenuState extends State<SideMenu> {
           _selectedScreen = const SubCategoryScreen();
         });
         break;
+      case VendorScreen.id:
+        setState(() {
+          _selectedScreen = const VendorScreen();
+        });
+        break;
     }
   }
 
@@ -107,6 +113,11 @@ class _SideMenuState extends State<SideMenu> {
                 route: SubCategoryScreen.id,
               ),
             ],
+          ),
+          AdminMenuItem(
+            title: 'Vendedores',
+            route: VendorScreen.id,
+            icon: Icons.group,
           ),
         ],
         selectedRoute: SideMenu.id,

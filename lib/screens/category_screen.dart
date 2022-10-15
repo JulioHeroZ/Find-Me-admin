@@ -2,10 +2,13 @@
 
 import 'package:file_picker/file_picker.dart';
 import 'package:find_me_admin/firebase_service.dart';
+import 'package:find_me_admin/widgets/categories_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:mime_type/mime_type.dart';
+import 'package:path/path.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const String id = 'category';
@@ -42,11 +45,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
         .ref('categoryImage/$fileName');
     try {
       await ref.putData(image);
-      String downloadUrl = await ref.getDownloadURL().then((value) {
+      String? mimiType = mime(
+        basename(fileName!),
+      );
+      var metaData = firebase_storage.SettableMetadata(contentType: mimiType);
+      firebase_storage.TaskSnapshot uploadSnapshot =
+          await ref.putData(image, metaData);
+      String downloadUrl =
+          await uploadSnapshot.ref.getDownloadURL().then((value) {
         if (value.isNotEmpty) {
           _service.saveCategory({
             'catName': _catName.text,
-            'image': value,
+            'image': '$value.png',
             'active': true
           }).then((value) {
             clear();
@@ -169,6 +179,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
           ),
         ),
+        SizedBox(
+          height: 10,
+        ),
+        CategoryListWidget()
       ],
     );
   }
